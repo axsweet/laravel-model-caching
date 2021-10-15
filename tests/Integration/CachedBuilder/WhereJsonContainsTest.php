@@ -5,6 +5,9 @@ use GeneaLabs\LaravelModelCaching\Tests\Fixtures\UncachedAuthor;
 use GeneaLabs\LaravelModelCaching\Tests\IntegrationTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * @group postgres
+ */
 class WhereJsonContainsTest extends IntegrationTestCase
 {
     use RefreshDatabase;
