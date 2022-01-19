@@ -106,7 +106,7 @@ class WhereInTest extends IntegrationTestCase
 
     public function testWhereInSubQueryUsesCorrectBindings()
     {
-        $key = sha1("genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:books:genealabslaravelmodelcachingtestsfixturesbook-publisher_id_in_select_id_from_publishers_where_name_=_Publisher_Foo_or_name_=_Publisher_Bar-id_>_0");
+        $key = sha1("genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:books:genealabslaravelmodelcachingtestsfixturesbook-publisher_id_in_select_id_from_publishers_where_name_=_Publisher_Foo_or_name_=_Publisher_Bar-id_>_0:http://localhost");
         $tags = [
             "genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:genealabslaravelmodelcachingtestsfixturesbook",
         ];
