@@ -17,7 +17,7 @@ class ForceDeleteTest extends IntegrationTestCase
                 "genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:genealabslaravelmodelcachingtestsfixturesauthor",
             ])
             ->get(sha1(
-                "genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:authors:genealabslaravelmodelcachingtestsfixturesauthor-id_=_1-authors.deleted_at_null:http://localhost"
+                "genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:authors:genealabslaravelmodelcachingtestsfixturesauthor-id_=_1-authors.deleted_at_null"
             ))["value"];
 
         (new Author)
@@ -29,7 +29,7 @@ class ForceDeleteTest extends IntegrationTestCase
                 "genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:genealabslaravelmodelcachingtestsfixturesauthor",
             ])
             ->get(sha1(
-                "genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:authors:genealabslaravelmodelcachingtestsfixturesauthor-id_=_1:http://localhost"
+                "genealabs:laravel-model-caching:testing:{$this->testingSqlitePath}testing.sqlite:authors:genealabslaravelmodelcachingtestsfixturesauthor-id_=_1"
             ))["value"]
             ?? null;
 
