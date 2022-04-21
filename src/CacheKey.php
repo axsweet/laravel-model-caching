@@ -330,14 +330,14 @@ class CacheKey
         $bindingFallback = __CLASS__ . ':UNKNOWN_BINDING';
         $currentBinding = $this->getCurrentBinding("where", $bindingFallback);
 
-        if ($currentBinding !== $bindingFallback) {
+        if ($currentBinding !== $bindingFallback && !is_null($currentBinding)) {
             $values = $currentBinding;
             $this->currentBinding++;
+        }
 
-            if ($where["type"] === "between") {
-                $values .= "_" . $this->getCurrentBinding("where");
-                $this->currentBinding++;
-            }
+        if ($where["type"] === "between") {
+            $values .= "_" . $this->getCurrentBinding("where");
+            $this->currentBinding++;
         }
 
         if (is_object($values)
