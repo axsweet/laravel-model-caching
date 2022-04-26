@@ -16,14 +16,14 @@
     ],
     "require": {
         "php": "*",
-        "genealabs/laravel-pivot-events": "^9.0",
-        "illuminate/cache": "^9.0",
-        "illuminate/config": "^9.0",
-        "illuminate/console": "^9.0",
-        "illuminate/container": "^9.0",
-        "illuminate/database": "^9.0",
-        "illuminate/http": "^9.0",
-        "illuminate/support": "^9.0"
+        "genealabs/laravel-pivot-events": "*",
+        "illuminate/cache": "*",
+        "illuminate/config": "*",
+        "illuminate/console": "*",
+        "illuminate/container": "*",
+        "illuminate/database": "*",
+        "illuminate/http": "*",
+        "illuminate/support": "*"
     },
     "require-dev": {
         "doctrine/dbal": "^3.3",
