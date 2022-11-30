@@ -154,7 +154,7 @@ class CacheKey
             $this->currentBinding += $replacementsCount;
         }
 
-        $subquery = collect(vsprintf(str_replace("_??_", "%s", $subquery), $values->toArray()));
+        $subquery = collect(vsprintf(str_replace("_??_", "%s", str_replace("%", "%%", $subquery)), $values->toArray()));
         $values = $this->recursiveImplode($subquery->toArray(), "_");
 
         return "-{$where["column"]}_{$type}{$values}";
