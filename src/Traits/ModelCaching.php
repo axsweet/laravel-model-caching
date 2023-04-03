@@ -76,18 +76,23 @@ trait ModelCaching
         // });
 
         static::pivotAttached(function ($instance, $secondInstance, $relationship) {
+            if(is_array($relationship)){
+                return;
+            }
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
         });
 
         static::pivotDetached(function ($instance, $secondInstance, $relationship) {
             if(is_array($relationship)){
-                dumpToFile('test',$relationship,'','w');
                 return;
             }
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
         });
 
         static::pivotUpdated(function ($instance, $secondInstance, $relationship) {
+            if(is_array($relationship)){
+                return;
+            }
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
         });
     }
