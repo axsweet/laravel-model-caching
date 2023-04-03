@@ -80,6 +80,10 @@ trait ModelCaching
         });
 
         static::pivotDetached(function ($instance, $secondInstance, $relationship) {
+            if(is_array($relationship)){
+                dumpToFile('test',$relationship,'','w');
+                return;
+            }
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
         });
 
