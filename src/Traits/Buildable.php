@@ -296,9 +296,24 @@ trait Buildable
             ->rememberForever(
                 $hashedCacheKey,
                 function () use ($arguments, $cacheKey, $method) {
+                    $value = parent::{$method}(...$arguments);
+                    /**
+                     * This might be a stupid solution or it might be the only solution. This is attempting to resolve
+                     * a "Serialization of a 'Closure'" error when attempting to cache a BelongsToMany relation
+                     * which naturally holds a 'pivot' relation with a pointer to the pivot parent model.
+                     *
+                     * In the context of our app, that pivot parent model winds up having closures stored as properties
+                     * Specifically spatie/medialibrary ends up storing closures after registering media collections.
+                     *
+                     * The risk of this change is if any application code is dependent on the `pivotParent` property
+                     * of a cached Pivot record, then you're a bit out of luck and would need to have a fallback.
+                     */
+                    if (is_iterable($value) && !empty($value[0]) && is_object($value[0]) && $value[0]?->pivot?->pivotParent) {
+                        unset($value[0]->pivot->pivotParent);
+                    }
                     return [
                         "key" => $cacheKey,
-                        "value" => parent::{$method}(...$arguments),
+                        "value" => $value,
                     ];
                 }
             );
