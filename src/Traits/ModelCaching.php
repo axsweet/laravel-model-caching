@@ -75,24 +75,19 @@ trait ModelCaching
         //     $instance->checkCooldownAndFlushAfterPersisting($instance);
         // });
 
-        static::pivotAttached(function ($instance, $secondInstance, $relationship) {
-            if(is_array($relationship)){
-                return;
-            }
+        static::pivotSynced(function ($instance, $relationship) {
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
         });
 
-        static::pivotDetached(function ($instance, $secondInstance, $relationship) {
-            if(is_array($relationship)){
-                return;
-            }
+        static::pivotAttached(function ($instance, $relationship) {
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
         });
 
-        static::pivotUpdated(function ($instance, $secondInstance, $relationship) {
-            if(is_array($relationship)){
-                return;
-            }
+        static::pivotDetached(function ($instance, $relationship) {
+            $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
+        });
+
+        static::pivotUpdated(function ($instance, $relationship) {
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
         });
     }

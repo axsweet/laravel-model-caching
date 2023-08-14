@@ -158,7 +158,8 @@ trait Buildable
         $perPage = null,
         $columns = ["*"],
         $pageName = "page",
-        $page = null
+        $page = null,
+        $total = null
     ) {
         if (! $this->isCachable()) {
             return parent::paginate($perPage, $columns, $pageName, $page);
@@ -169,8 +170,18 @@ trait Buildable
         if (is_array($page)) {
             $page = $this->recursiveImplodeWithKey($page);
         }
+        
         $columns = collect($columns)->toArray();
-        $cacheKey = $this->makeCacheKey($columns, null, "-paginate_by_{$perPage}_{$pageName}_{$page}");
+        $keyDifferentiator = "-paginate_by_{$perPage}_{$pageName}_{$page}";
+
+        if ($total !== null) {
+            $total = value($total);
+            $keyDifferentiator .= $total !== null
+                ? "_{$total}"
+                : "";
+        }
+
+        $cacheKey = $this->makeCacheKey($columns, null, $keyDifferentiator);
 
         return $this->cachedValue(func_get_args(), $cacheKey);
     }
@@ -296,24 +307,9 @@ trait Buildable
             ->rememberForever(
                 $hashedCacheKey,
                 function () use ($arguments, $cacheKey, $method) {
-                    $value = parent::{$method}(...$arguments);
-                    /**
-                     * This might be a stupid solution or it might be the only solution. This is attempting to resolve
-                     * a "Serialization of a 'Closure'" error when attempting to cache a BelongsToMany relation
-                     * which naturally holds a 'pivot' relation with a pointer to the pivot parent model.
-                     *
-                     * In the context of our app, that pivot parent model winds up having closures stored as properties
-                     * Specifically spatie/medialibrary ends up storing closures after registering media collections.
-                     *
-                     * The risk of this change is if any application code is dependent on the `pivotParent` property
-                     * of a cached Pivot record, then you're a bit out of luck and would need to have a fallback.
-                     */
-                    if (is_iterable($value) && !empty($value[0]) && is_object($value[0]) && $value[0]?->pivot?->pivotParent) {
-                        unset($value[0]->pivot->pivotParent);
-                    }
                     return [
                         "key" => $cacheKey,
-                        "value" => $value,
+                        "value" => parent::{$method}(...$arguments),
                     ];
                 }
             );
