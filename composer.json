@@ -4,8 +4,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Mike Bronner",
-            "email": "hello@genealabs.com"
+            "name": "Mike Bronner"
         }
     ],
     "repositories": [
@@ -15,15 +14,15 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "genealabs/laravel-pivot-events": "^10.0",
-        "illuminate/cache": "^10.0",
-        "illuminate/config": "^10.0",
-        "illuminate/console": "^10.0",
-        "illuminate/container": "^10.0",
-        "illuminate/database": "^10.0",
-        "illuminate/http": "^10.0",
-        "illuminate/support": "^10.0"
+        "php": "*",
+        "genealabs/laravel-pivot-events": "*",
+        "illuminate/cache": "*",
+        "illuminate/config": "*",
+        "illuminate/console": "*",
+        "illuminate/container": "*",
+        "illuminate/database": "*",
+        "illuminate/http": "*",
+        "illuminate/support": "*"
     },
     "require-dev": {
         "doctrine/dbal": "^3.3",
