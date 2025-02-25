@@ -1,10 +1,10 @@
 {
-    "name": "genealabs/laravel-model-caching",
+    "name": "axsweet/laravel-model-caching",
     "description": "Automatic caching for Eloquent models.",
     "license": "MIT",
     "authors": [
         {
-            "name": "Mike Bronner"
+            "name": "Alex"
         }
     ],
     "repositories": [

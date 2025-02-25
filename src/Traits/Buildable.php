@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelModelCaching\Traits;
 
+use Illuminate\Database\Query\Expression;
 use Illuminate\Pagination\Paginator;
 
 /**
@@ -13,9 +14,14 @@ trait Buildable
             return parent::avg($column);
         }
 
-        $cacheKey = $this->makeCacheKey(["*"], null, "-avg_{$column}");
+        $cacheKey = $this->makeCacheKey(["*"], null, "-avg_{$this->expressionToString($column)}");
 
         return $this->cachedValue(func_get_args(), $cacheKey);
+    }
+
+    public function average($column)
+    {
+        return $this->avg($column);
     }
 
     public function count($columns = "*")
@@ -138,7 +144,7 @@ trait Buildable
             return parent::max($column);
         }
 
-        $cacheKey = $this->makeCacheKey(["*"], null, "-max_{$column}");
+        $cacheKey = $this->makeCacheKey(["*"], null, "-max_{$this->expressionToString($column)}");
 
         return $this->cachedValue(func_get_args(), $cacheKey);
     }
@@ -149,7 +155,7 @@ trait Buildable
             return parent::min($column);
         }
 
-        $cacheKey = $this->makeCacheKey(["*"], null, "-min_{$column}");
+        $cacheKey = $this->makeCacheKey(["*"], null, "-min_{$this->expressionToString($column)}");
 
         return $this->cachedValue(func_get_args(), $cacheKey);
     }
@@ -215,7 +221,7 @@ trait Buildable
             return parent::sum($column);
         }
 
-        $cacheKey = $this->makeCacheKey(["*"], null, "-sum_{$column}");
+        $cacheKey = $this->makeCacheKey(["*"], null, "-sum_{$this->expressionToString($column)}");
 
         return $this->cachedValue(func_get_args(), $cacheKey);
     }
@@ -307,11 +313,39 @@ trait Buildable
             ->rememberForever(
                 $hashedCacheKey,
                 function () use ($arguments, $cacheKey, $method) {
+                    $value = parent::{$method}(...$arguments);
+                    /**
+                     * This might be a stupid solution or it might be the only solution. This is attempting to resolve
+                     * a "Serialization of a 'Closure'" error when attempting to cache a BelongsToMany relation
+                     * which naturally holds a 'pivot' relation with a pointer to the pivot parent model.
+                     *
+                     * In the context of our app, that pivot parent model winds up having closures stored as properties
+                     * Specifically spatie/medialibrary ends up storing closures after registering media collections.
+                     *
+                     * The risk of this change is if any application code is dependent on the `pivotParent` property
+                     * of a cached Pivot record, then you're a bit out of luck and would need to have a fallback.
+                     */
+                    if (is_iterable($value) && !empty($value)) {
+                                                foreach ($value as $index => $model) {
+                                                    if (!empty($model) && is_object($model) && $model?->pivot?->pivotParent) {
+                                unset($model->pivot->pivotParent);
+                                                    }
+                                                }
+                    }
                     return [
                         "key" => $cacheKey,
-                        "value" => parent::{$method}(...$arguments),
+                        "value" => $value,
                     ];
                 }
             );
+    }
+
+    private function expressionToString($value)
+    {
+        if (! $value instanceof Expression) {
+            return $value;
+        }
+
+        return $this->query->getGrammar()->getValue($value);
     }
 }
